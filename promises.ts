@@ -22,5 +22,32 @@ myPromise // here im using the promise that already started running when it was 
 
 //part 2 fetching data from an API
 
+type AdviceResponse = {
+    slip:{
+        id: number;
+        advice: string;
+    };
+};
+
+const fetchAdviceById = (id: number) => {
+    //logic
+    const promise: Promise<void> = fetch(
+        `https://api.adviceslip.com/advice/${id}`
+    ) // fetching from this adress
+    .then ((response: Response) => { //this returns the promise
+        if (!response.ok) {
+            throw new Error("network response was not ok");
+        }
+        return response.json() as Promise<AdviceResponse>;
+    })
+    .then((data: AdviceResponse) => {
+        const advice: string = data.slip.advice;
+        console.log(`Àdvice (ID: $(id)): ${advice}`);
+    })
+    .catch((error: unknown) => {
+        console.error("Error fetching advive:", error);
+    });
+};
+fetchAdviceById(1)
 
 //bonus
