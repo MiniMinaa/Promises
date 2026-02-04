@@ -1,24 +1,17 @@
 //part 1 create your own promise
-const myPromise = new Promise((resolve, reject) =>{ //i've created a variable called myPromise and it has a function attatched to it
-    //logic
-    let success = true; //operation will be successful bc its true
+//const myPromise = new Promise((resolve, reject) => { //i've created a variable called myPromise and it has a function attatched to it
 
-    if (success) { //the logic goes here
-        resolve("operation was successful!");
-    } else {
-        reject("operation failed");
-    }
-});
+const flipCoin = (): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
+        const result = Math.random();
 
-myPromise // here im using the promise that already started running when it was created
-.then((message) => {
-    console.log(message);
-    //logic
-})
-.catch((error) => {
-    console.log(error);
-    //logic
-})
+        if (result > 0.5) {
+            resolve("You win!");
+        } else {
+            reject("You Lose!");
+        }
+    });
+};
 
 //part 2 fetching data from an API
 
@@ -41,13 +34,19 @@ const fetchAdviceById = (id: number) => {
         return response.json() as Promise<AdviceResponse>;
     })
     .then((data: AdviceResponse) => {
-        const advice: string = data.slip.advice;
-        console.log(`Àdvice (ID: $(id)): ${advice}`);
+        console.log(`Àdvice (ID: ${id}): ${data.slip.advice}`);
     })
     .catch((error: unknown) => {
         console.error("Error fetching advive:", error);
     });
 };
-fetchAdviceById(1)
 
+flipCoin()
+    .then((message: string) => {
+        console.log(message);
+        return fetchAdviceById(1);
+    })
+    .catch((error: string) => {
+        console.log(error)
+    });
 //bonus
